@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: birdboard_nginx
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/app:cached
+    networks:
+      - birdboard
+    depends_on:
+      - php
+
+  php:
+    container_name: birdboard_php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./docker/php/init:/docker-entrypoint
+      - .:/app:cached
+    networks:
+      - birdboard
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+  node:
+    container_name: birdboard_node
+    image: node:latest
+    user: 1000:1000
+    volumes:
+      - .:/app:cached
+    working_dir: /app
+    environment:
+      NPM_CONFIG_PREFIX: ~/.npm-global
+    entrypoint: [ "bash", "/app/docker/etc/node/run-npm.sh" ]
+
+  mysql:
+    container_name: birdboard_mysql
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    ports:
+      - "3306:3306"
+    tty: true
+    volumes:
+      - vol_birdboard_mysql:/var/lib/mysql
+    networks:
+      - birdboard
+    env_file:
+      - ./docker/mysql/.env.mysql
+
+  redis:
+    container_name: birdboard_redis
+    image: redis:alpine
+    volumes:
+      - vol_birdboard_redis:/data
+
+networks:
+  birdboard:
+    driver: "bridge"
+
+volumes:
+  vol_birdboard_mysql:
+    driver: "local"
+  vol_birdboard_redis:
+    driver: "local"
