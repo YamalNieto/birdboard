@@ -1,19 +1,36 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <h1>{{ $project->title }}</h1>
-        </h2>
-    </x-slot>
+    <div class="container max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+        {{--   <div class="container mx-auto py-4">--}}
+        <header class="flex items-center mb-3 py-4">
+            <div class="flex justify-between items-end w-full">
+                <p class="text-gray-500 font-normal">
+                    <a href="/projects" class="ext-gray-500 font-normal no-underline">My projects</a> / {{ $project->title }}
+                </p>
+                <x-button-blue>New Project</x-button-blue>
+            </div>
+        </header>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <ul>
-                        <div>{{ $project->description }}</div>
-                    </ul>
+        <main>
+            <div class="lg:flex -mx-3">
+                <div class="lg:w-3/4 px-3 mb-6">
+                    <div class="mb-8">
+                        <h2 class="text-lg text-gray-500 font-normal mb-3">Tasks</h2>
+                        <x-card class="mb-3">Lorem Ipsum</x-card>
+                        <x-card class="mb-3">Lorem Ipsum</x-card>
+                        <x-card class="mb-3">Lorem Ipsum</x-card>
+                        <x-card>Lorem Ipsum</x-card>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg text-gray-500 font-normal mb-3">General notes</h2>
+                        <textarea class="w-full bg-white p-5 rounded-xl shadow" style="min-height: 200px">Lorem Ipsum</textarea>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/4 px-3">
+                    @include('projects.partials.card-project')
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </x-app-layout>
