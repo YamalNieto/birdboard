@@ -19,4 +19,9 @@ abstract class TestCase extends BaseTestCase
     {
         return Project::factory()->create();
     }
+
+    protected function authenticate($user = null)
+    {
+        return $this->actingAs($user ?: User::factory()->create());
+    }
 }

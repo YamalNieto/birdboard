@@ -15,9 +15,9 @@
                 <div class="lg:w-3/4 px-3 mb-6">
                     <div class="mb-8">
                         <h2 class="text-lg text-gray-500 font-normal mb-3">Tasks</h2>
-                        <x-card class="mb-3">Lorem Ipsum</x-card>
-                        <x-card class="mb-3">Lorem Ipsum</x-card>
-                        <x-card class="mb-3">Lorem Ipsum</x-card>
+                        @foreach($project->tasks as $tasks)
+                            <x-card class="mb-3">{{ $tasks->body }}</x-card>
+                        @endforeach
                         <x-card>Lorem Ipsum</x-card>
                     </div>
 
