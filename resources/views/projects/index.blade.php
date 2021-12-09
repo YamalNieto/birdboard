@@ -14,7 +14,7 @@
            <div class="flex justify-between items-end w-full">
                <h2 class="text-gray-500 font-normal">My projects</h2>
                {{--           <h2><a href="/projects/create">New Project</a></h2>--}}
-               <x-button-blue>New Project</x-button-blue>
+               <a href="/projects/create"><x-button-blue>New Project</x-button-blue></a>
            </div>
        </header>
 

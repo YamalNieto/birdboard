@@ -6,7 +6,7 @@
                 <p class="text-gray-500 font-normal">
                     <a href="/projects" class="ext-gray-500 font-normal no-underline">My projects</a> / {{ $project->title }}
                 </p>
-                <x-button-blue>New Project</x-button-blue>
+                <a href="/projects/create"><x-button-blue>New Project</x-button-blue></a>
             </div>
         </header>
 
@@ -15,10 +15,27 @@
                 <div class="lg:w-3/4 px-3 mb-6">
                     <div class="mb-8">
                         <h2 class="text-lg text-gray-500 font-normal mb-3">Tasks</h2>
-                        @foreach($project->tasks as $tasks)
-                            <x-card class="mb-3">{{ $tasks->body }}</x-card>
+
+                        @foreach($project->tasks as $task)
+                            <x-card class="mb-3">
+                                <form action="{{ $project->path() . '/tasks/' . $task->id }}" method="POST">
+                                    @method('PATCH')
+                                    @csrf
+
+                                    <div class="flex">
+                                        <input name="body" value="{{ $task->body }}" class="w-full {{ $task->completed ? 'text-gray-500' : '' }}">
+                                        <input name="completed" type="checkbox" onchange="this.form.submit()" {{ $task->completed ? 'checked' : '' }}>
+                                    </div>
+                                </form>
+                            </x-card>
                         @endforeach
-                        <x-card>Lorem Ipsum</x-card>
+
+                        <x-card class="mb-3">
+                            <form action="{{ $project->path() . '/tasks' }}" method="POST">
+                                @csrf
+                                <input name="body" class="w-full" placeholder="Add a new task...">
+                            </form>
+                        </x-card>
                     </div>
 
                     <div>
