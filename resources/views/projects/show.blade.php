@@ -51,6 +51,10 @@
                                 placeholder="Anything special that you want to make a note of?"
                             >{{ $project->notes }}</textarea>
 
+                            @error('notes')
+                                <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                            @enderror
+
                             <x-button-blue type="submit">Save</x-button-blue>
                         </form>
                     </div>
