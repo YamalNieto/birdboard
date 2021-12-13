@@ -12,6 +12,16 @@ class ManageProjectsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
+    public function test_guests_cannot_manage_projects()
+    {
+        $project = Project::factory()->create();
+
+        $this->get('/projects')->assertRedirect('login');
+        $this->get('/projects/create')->assertRedirect('login');
+        $this->get($project->path() . '/edit')->assertRedirect('login');
+        $this->get($project->path())->assertRedirect('login');
+        $this->post('/projects', $project->toArray())->assertRedirect('login');
+    }
     public function test_guests_cannot_create_project()
     {
         $attributes = Project::factory()->raw();
@@ -71,8 +81,12 @@ class ManageProjectsTest extends TestCase
         $project = Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->patch($project->path(), [
+            'title' => 'Changed',
+            'description' => 'Changed',
             'notes' => 'Changed'
         ])->assertRedirect($project->path());
+
+        $this->get($project->path().'/edit')->assertOk();
 
         $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
     }

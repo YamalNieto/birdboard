@@ -34,6 +34,11 @@ class ProjectsController extends Controller
         return redirect($project->path());
     }
 
+    public function edit(Project $project)
+    {
+        return view('projects.edit', ['project' => $project]);
+    }
+
     public function show(Project $project)
     {
         if (auth()->user()->isNot($project->owner)) {
@@ -49,9 +54,13 @@ class ProjectsController extends Controller
             abort(403);
         }
 
-        $project->update([
-            'notes' => request('notes')
+        $attributes = request()->validate([
+            'title' => ['required'],
+            'description' => ['required'],
+            'notes' => ['max:255']
         ]);
+
+        $project->update($attributes);
 
         return redirect($project->path());
     }

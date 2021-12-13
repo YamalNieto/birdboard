@@ -6,7 +6,7 @@
                 <p class="text-gray-500 font-normal">
                     <a href="/projects" class="ext-gray-500 font-normal no-underline">My projects</a> / {{ $project->title }}
                 </p>
-                <a href="/projects/create"><x-button-blue>New Project</x-button-blue></a>
+                <a href="{{ $project->path() . '/edit' }}"><x-button-blue>Edit Project</x-button-blue></a>
             </div>
         </header>
 
