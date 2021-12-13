@@ -46,7 +46,8 @@ class ManageProjectsTest extends TestCase
 
         $attributes = [
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph
+            'description' => $this->faker->sentence,
+            'notes' => 'General notes here.'
         ];
 
         $response = $this->post('/projects', $attributes);
@@ -57,7 +58,23 @@ class ManageProjectsTest extends TestCase
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    public function test_a_user_can_update_a_project()
+    {
+        $this->authenticate();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+            'notes' => 'Changed'
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
     }
 
     public function test_a_user_can_view_their_project()
@@ -81,6 +98,16 @@ class ManageProjectsTest extends TestCase
 
         $this->get($project->path())->assertStatus(403);
     }
+
+    public function test_an_authenticated_user_cannot_update_the_projects_of_others()
+    {
+        $this->authenticate();
+
+        $project = Project::factory()->create();
+
+        $this->patch($project->path(), [])->assertStatus(403);
+    }
+
 
     public function test_a_project_requires_a_title()
     {
