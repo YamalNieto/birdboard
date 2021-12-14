@@ -7,11 +7,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ActivityFeedTest extends TestCase
+class TriggerActivityTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_creating_a_project_records_activity()
+    public function test_creating_a_project()
     {
         $project = Project::factory()->create();
 
@@ -20,7 +20,7 @@ class ActivityFeedTest extends TestCase
         $this->assertEquals('created', $project->activity[0]->description);
     }
 
-    public function test_updating_a_project_records_activity()
+    public function test_updating_a_project()
     {
         $project = Project::factory()->create();
 
@@ -30,7 +30,7 @@ class ActivityFeedTest extends TestCase
         $this->assertEquals('updated', $project->activity->last()->description);
     }
 
-    public function test_creating_a_new_task_records_project_activity()
+    public function test_creating_a_task()
     {
         $project = Project::factory()->create();
 
@@ -40,7 +40,7 @@ class ActivityFeedTest extends TestCase
         $this->assertEquals('created_task', $project->activity->last()->description);
     }
 
-    public function test_completing_a_task_records_project_activity()
+    public function test_completing_a_task()
     {
         $this->authenticate();
 
@@ -55,6 +55,49 @@ class ActivityFeedTest extends TestCase
 
         $this->assertCount(3, $project->activity);
         $this->assertEquals('completed_task', $project->activity->last()->description);
+    }
+
+    public function test_incompleting_a_task()
+    {
+        $this->authenticate();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $task = $project->addTask('Some task');
+
+        $this->patch($task->path(), [
+            'body' => 'foobar',
+            'completed' => true
+        ]);
+
+        $this->assertCount(3, $project->activity);
+
+        $this->patch($task->path(), [
+            'body' => 'foobar',
+            'completed' => false
+        ]);
+
+        $project->refresh();
+
+        $this->assertCount(4, $project->activity);
+
+        $this->assertEquals('incompleted_task', $project->activity->last()->description);
+    }
+
+    public function test_deleting_a_task()
+    {
+        $this->authenticate();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $task = $project->addTask('Some task');
+
+        $task->delete();
+
+        $this->assertCount(3, $project->activity);
+
+        $this->assertEquals('deleted_task', $project->activity->last()->description);
 
     }
+
 }
