@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -30,7 +31,7 @@ class TriggerActivityTest extends TestCase
         $this->assertEquals('updated', $project->activity->last()->description);
     }
 
-    public function test_creating_a_task()
+    public function test_creating_a_new_task()
     {
         $project = Project::factory()->create();
 
@@ -38,6 +39,7 @@ class TriggerActivityTest extends TestCase
 
         $this->assertCount(2, $project->activity);
         $this->assertEquals('created_task', $project->activity->last()->description);
+        $this->assertInstanceOf(Task::class, $project->activity->last()->subject);
     }
 
     public function test_completing_a_task()
@@ -55,6 +57,7 @@ class TriggerActivityTest extends TestCase
 
         $this->assertCount(3, $project->activity);
         $this->assertEquals('completed_task', $project->activity->last()->description);
+        $this->assertInstanceOf(Task::class, $project->activity->last()->subject);
     }
 
     public function test_incompleting_a_task()
@@ -80,8 +83,8 @@ class TriggerActivityTest extends TestCase
         $project->refresh();
 
         $this->assertCount(4, $project->activity);
-
         $this->assertEquals('incompleted_task', $project->activity->last()->description);
+        $this->assertInstanceOf(Task::class, $project->activity->last()->subject);
     }
 
     public function test_deleting_a_task()
