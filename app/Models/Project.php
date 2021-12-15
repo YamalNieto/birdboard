@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Project extends Model
 {
     use HasFactory;
+    use RecordsActivity;
 
     protected $guarded = [];
+
+    protected static $recordableEvents = ['created', 'updated'];
+
 
     public function path()
     {
@@ -34,12 +40,5 @@ class Project extends Model
     public function activity()
     {
         return $this->hasMany(Activity::class)->latest();
-    }
-
-    public function recordActivity($description)
-    {
-        $this->activity()->create([
-            'description' => $description
-        ]);
     }
 }

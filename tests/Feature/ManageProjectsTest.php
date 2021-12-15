@@ -76,6 +76,7 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_update_a_project()
     {
+        $this->withoutExceptionHandling();
         $this->authenticate();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
