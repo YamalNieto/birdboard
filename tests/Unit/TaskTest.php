@@ -17,6 +17,7 @@ class TaskTest extends TestCase
 
         $this->assertInstanceOf(Project::class, $task->project);
     }
+
     public function test_it_has_a_path()
     {
         $task = Task::factory()->create();

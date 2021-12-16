@@ -10,7 +10,7 @@ class ProjectTasksController extends Controller
 {
     public function store(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)){
+        if (auth()->user()->isNot($project->owner) && !( $project->members->contains(auth()->user()) ) ){
             abort(403);
         }
 

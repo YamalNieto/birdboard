@@ -27,7 +27,7 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('projects', ProjectsController::class);
-    
+
     Route::post('/projects/{project}/tasks', [ProjectTasksController::class, 'store']);
     Route::patch('/projects/{project}/tasks/{task}', [ProjectTasksController::class, 'update']);
 });
