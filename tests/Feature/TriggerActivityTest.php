@@ -72,7 +72,7 @@ class TriggerActivityTest extends TestCase
         $this->assertInstanceOf(Task::class, $project->activity->last()->subject);
     }
 
-    public function test_incompleting_a_task()
+    public function test_uncompleting_a_task()
     {
         $this->authenticate();
 
@@ -95,7 +95,7 @@ class TriggerActivityTest extends TestCase
         $project->refresh();
 
         $this->assertCount(4, $project->activity);
-        $this->assertEquals('incompleted_task', $project->activity->last()->description);
+        $this->assertEquals('uncompleted_task', $project->activity->last()->description);
         $this->assertInstanceOf(Task::class, $project->activity->last()->subject);
     }
 

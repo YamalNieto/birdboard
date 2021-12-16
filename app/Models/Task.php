@@ -39,10 +39,10 @@ class Task extends Model
         $this->recordActivity('completed_task');
     }
 
-    public function incomplete()
+    public function uncomplete()
     {
         $this->update(['completed' => false]);
 
-        $this->recordActivity('incompleted_task');
+        $this->recordActivity('uncompleted_task');
     }
 }

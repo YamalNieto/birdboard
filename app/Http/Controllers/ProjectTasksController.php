@@ -35,7 +35,7 @@ class ProjectTasksController extends Controller
 
         $task->update($attributes);
 
-        request('completed') ? $task->complete() : $task->incomplete();
+        request('completed') ? $task->complete() : $task->uncomplete();
 
         return redirect($project->path());
     }

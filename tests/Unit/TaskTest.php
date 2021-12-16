@@ -41,7 +41,7 @@ class TaskTest extends TestCase
 
         $this->assertTrue($task->completed);
 
-        $task->incomplete();
+        $task->uncomplete();
 
         $this->assertFalse($task->completed);
     }

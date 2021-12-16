@@ -1,5 +1,9 @@
+@php
+    $userName = $activity->user == auth()->user() ? 'You' : $activity->user->name;
+@endphp
+
 @if (count($activity->changes['after']) == 1)
-    You updated the {{ key($activity->changes['after']) }} of the project
+    {{ $userName }} updated the {{ key($activity->changes['after']) }} of the project
 @else
-    You updated the project
+    {{ $userName }} updated the project
 @endif
