@@ -74,9 +74,30 @@ class ManageProjectsTest extends TestCase
             ->assertSee($attributes['notes']);
     }
 
+    public function test_unauthorized_users_cannot_delete_a_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->delete($project->path())->assertRedirect('/login');
+
+        $this->authenticate();
+
+        $this->delete($project->path())->assertStatus(403);
+    }
+
+    public function test_a_user_can_delete_a_project()
+    {
+        $this->authenticate();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->delete($project->path())->assertRedirect('/projects');
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
+    }
+
     public function test_a_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
         $this->authenticate();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
