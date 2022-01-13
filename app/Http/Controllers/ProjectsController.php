@@ -11,7 +11,7 @@ class ProjectsController extends Controller
     {
         $projects = auth()->user()->projects;
 
-        return view('projects.index', compact('projects'));
+        return view('projects.index', ['projects' => $projects]);
     }
 
     public function create()
@@ -41,18 +41,14 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         return view('projects.show', ['project' => $project]);
     }
 
     public function update(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         $attributes = request()->validate([
             'title' => ['required', 'sometimes'],
@@ -67,9 +63,7 @@ class ProjectsController extends Controller
 
     public function destroy(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         $project->delete();
 
