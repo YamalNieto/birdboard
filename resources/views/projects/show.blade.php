@@ -73,6 +73,9 @@
                     @include('projects.partials.card-project')
                     @include('projects.activity.card')
 
+                    @can('manage', $project)
+                        @include('projects.partials.card-invite')
+                    @endcan
                 </div>
             </div>
         </main>
