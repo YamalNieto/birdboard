@@ -11,19 +11,21 @@
        <main class="max-w-7xl lg:flex lg:flex-wrap -mx-3">
            @forelse ($projects as $project)
                <div class="lg:w-1/3 px-3 pb-6">
-                   <x-card style="height:200px">
+                   <x-card class="flex flex-col" style="height:200px">
                        <h3 class="font-normal text-xl py-4 -ml-5 mb-3 border-l-4 pl-4" style="border-color: lightskyblue"><a href="{{ $project->path() }}">{{ $project->title }}</a></h3>
 
-                       <div class="text-gray-500">{{ $project->description }}</div>
+                       <div class="text-gray-500 flex-1">{{ $project->description }}</div>
 
-                       <footer>
-                           <form method="POST" action="{{ $project->path() }}" class="text-right">
-                               @csrf
-                               @method('delete')
+                       @can('manage', $project)
+                           <footer>
+                               <form method="POST" action="{{ $project->path() }}" class="text-right">
+                                   @csrf
+                                   @method('delete')
 
-                                <button class="text-sm" type="submit">Delete</button>
-                           </form>
-                       </footer>
+                                    <button class="text-sm" type="submit">Delete</button>
+                               </form>
+                           </footer>
+                       @endcan
                    </x-card>
                </div>
            @empty
