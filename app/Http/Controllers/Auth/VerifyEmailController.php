@@ -1,4 +1,4 @@
-<?phpLaravel
+<?php
 
 namespace App\Http\Controllers\Auth;
 
